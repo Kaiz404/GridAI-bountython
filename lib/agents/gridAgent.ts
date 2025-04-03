@@ -48,11 +48,9 @@ export async function getAgentInstance() {
     }
 
     // Create agent without problematic tools that might cause hydration issues
-    const solanaKit = new SolanaAgentKit(privateKey, rpcUrl!, {
-      OPENAI_API_KEY: apiKey!,
-    });
+    const solanaKit = new SolanaAgentKit(privateKey, rpcUrl!, apiKey!,);
 
-    const tools = [
+    const tools: any[] = [
       // new SolanaGetInfoTool(solanaKit),
       // new SolanaBalanceTool(solanaKit),
       // new SolanaBalanceOtherTool(solanaKit),
@@ -88,16 +86,15 @@ export async function sendMessageToAgent(input: string) {
   
   try {
     const agent = await getAgentInstance();
-    const config = { 
-      version: "v2",
-      configurable: { thread_id: "Solana Agent Kit!" } 
-    };
     
     return agent.streamEvents(
       {
         messages: [new HumanMessage(input)],
       },
-      config,
+      { 
+        version: "v2",
+        configurable: { thread_id: "Solana Agent Kit!" } 
+      },
     );
   } catch (error) {
     console.error("Error sending message to agent:", error);

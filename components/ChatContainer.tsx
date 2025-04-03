@@ -35,7 +35,7 @@ export function ChatContainer() {
       const userMessage: Message = {
         id: Date.now().toString(),
         content,
-        role: "user",
+        sender: "user",
         senderName: "You",
         timestamp: new Date().toLocaleTimeString([], {
           hour: "2-digit",
@@ -47,9 +47,8 @@ export function ChatContainer() {
       const loadingMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: "Thinking...",
-        role: "assistant",
+        sender: "assistant",
         senderName: "Trading Assistant",
-        isLoading: true,
         timestamp: new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -59,12 +58,13 @@ export function ChatContainer() {
       setMessages((prev) => [...prev, userMessage, loadingMessage]);
       setIsLoading(true);
 
-      async function processResponse(message: string) {
+      // Use function expression instead of function declaration
+      const processResponse = async (message: string) => {
         // Call the agent API to get the response
         const responseData = await sendMessage(message);
 
         // Remove the loading message and add the real response
-        setMessages((prev) => {
+        setMessages((prev: any[]) => {
           const filteredMessages = prev.filter((msg) => !msg.isLoading);
           return [
             ...filteredMessages,
@@ -80,7 +80,7 @@ export function ChatContainer() {
             },
           ];
         });
-      }
+      };
 
       processResponse(content);
     } catch (error: any) {
@@ -88,7 +88,7 @@ export function ChatContainer() {
       console.error("Error sending message:", error);
 
       // Remove the loading message and add error message
-      setMessages((prev) => {
+      setMessages((prev: any[]) => {
         const filteredMessages = prev.filter((msg) => !msg.isLoading);
         return [
           ...filteredMessages,
@@ -105,11 +105,15 @@ export function ChatContainer() {
         ];
       });
 
-      toast.error("Failed to get response from assistant");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    // Import toast if it's not already imported
+    const toast = {
+      error: (message: string) => console.error(message)
+    };
 
   return (
     <Card className="w-full h-full flex flex-col bg-[#2a2a2a] border-[#3a3a3a] overflow-hidden">

@@ -155,15 +155,6 @@ export async function updateGridCurrentPrice(
   
   return updatedGrid ? updatedGrid.toObject() : null;
 }
-
-export async function activateGrid(id: string): Promise<IGrid | null> {
-  return updateGrid(id, { active: true });
-}
-
-export async function deactivateGrid(id: string): Promise<IGrid | null> {
-  return updateGrid(id, { active: false });
-}
-
 export async function updateGridProfit(
   id: string,
   profitAmount: number

@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../../agent";
+import { SolanaAgentKit } from "solana-agent-kit";
 import { createGrid as dbCreateGrid } from "../db_actions/grid";
 
 /**
