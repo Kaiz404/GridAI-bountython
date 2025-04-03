@@ -130,6 +130,7 @@ export function AgentProvider({ children }: AgentProviderProps) {
         error,
         sendMessage,
         abortCurrentRequest,
+        retryInitialization,
       }}
     >
       {children}
