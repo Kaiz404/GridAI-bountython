@@ -34,32 +34,6 @@ export async function POST(request: NextRequest) {
     isInitializing = false;
     initializationError = null;
 
-    
-    // const eventStream = agent.streamEvents(
-    //   {
-    //     messages,
-    //   },
-    //   {
-    //     version: "v2",
-    //     configurable: {
-    //       thread_id: "Solana Agent Kit!",
-    //     },
-    //   },
-    // );
-
-    // const textEncoder = new TextEncoder();
-    // const transformStream = new ReadableStream({
-    //   async start(controller) {
-    //     for await (const { event, data } of eventStream) {
-    //       if (event === "on_chat_model_stream") {
-    //         if (data.chunk.content) {
-    //           controller.enqueue(textEncoder.encode(data.chunk.content));
-    //         }
-    //       }
-    //     }
-    //     controller.close();
-    //   },
-    // });
     return new Response("Agent initialized successfully", { status: 200 });
     
   } catch (error: any) {

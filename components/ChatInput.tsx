@@ -1,42 +1,44 @@
-"use client"
+"use client";
 
-import React from "react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { SendHorizontal } from "lucide-react"
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { SendHorizontal } from "lucide-react";
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void
-  disabled?: boolean
+  onSendMessage: (message: string) => void;
+  disabled?: boolean;
 }
 
 export function ChatInput({ onSendMessage, disabled = false }: ChatInputProps) {
-  const [message, setMessage] = React.useState("")
+  const [message, setMessage] = React.useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (message.trim()) {
-      onSendMessage(message)
-      setMessage("")
+      onSendMessage(message);
+      setMessage("");
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleSubmit(e)
+      e.preventDefault();
+      handleSubmit(e);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="p-4 border-t border-[#3a3a3a]">
       <div className="flex gap-2">
         <Textarea
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
           onKeyDown={handleKeyDown}
           placeholder="Type a message..."
-          className="min-h-[60px] max-h-[120px] bg-[#333333] border-[#444444] resize-none"
+          className="min-h-[60px] max-h-[120px] bg-[#333333] border-[#444444] resize-none text-white"
           disabled={disabled}
         />
         <Button
@@ -49,6 +51,5 @@ export function ChatInput({ onSendMessage, disabled = false }: ChatInputProps) {
         </Button>
       </div>
     </form>
-  )
+  );
 }
-

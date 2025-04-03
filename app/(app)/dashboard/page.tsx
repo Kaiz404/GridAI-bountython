@@ -5,7 +5,7 @@ import { getGrids, createGrid } from "@/lib/db_actions/grid";
 
 const initializeAgent = async () => {
   try {
-    const response = await fetch("/api/chat", {
+    const response = await fetch("/api/agent/initialize", {
       method: "POST",
       body: JSON.stringify({
         messages: "HI THERE",
@@ -28,17 +28,17 @@ const initializeAgent = async () => {
 
 export default function Home() {
   return (
-    <div className="flex w-full min-h-[calc(100vh-81px)] items-center justify-center flex-col">
+    <div className="flex w-full  items-center justify-center flex-col">
       <div className="flex w-[95%] bg-blue-500 items-center justify-center">
         <DashboardCard />
-        <button
+        {/* <button
           className="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-2 px-4 border border-blue-400 rounded shadow"
           onClick={async () => {
             initializeAgent();
           }}
         >
           Create grid
-        </button>
+        </button> */}
       </div>
     </div>
   );

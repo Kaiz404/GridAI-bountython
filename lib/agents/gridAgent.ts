@@ -4,7 +4,11 @@ import { SolanaAgentKit } from "solana-agent-kit";
 import { HumanMessage } from "@langchain/core/messages";
 import { ChatOpenAI } from "@langchain/openai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import type { StructuredTool } from "@langchain/core/tools";
 import { MemorySaver } from "@langchain/langgraph";
+import { IterableReadableStream } from "@langchain/core/utils/stream";
+import type { StreamEvent } from "@langchain/core/tracers/log_stream";
+
 // import { 
 //   SolanaBalanceOtherTool, 
 //   SolanaBalanceTool, 
@@ -15,9 +19,8 @@ import { MemorySaver } from "@langchain/langgraph";
 //   SolanaLimitOrderTool, 
 //   SolanaTradeTool 
 // } from "solana-agent-kit/dist/langchain";
-
 // Cache agent instance for reuse across requests
-let agentInstance: any = null;
+let agentInstance: ReturnType<typeof createReactAgent> | null = null;
 
 export async function getAgentInstance() {
   console.log("Fetching agent instance...");
@@ -85,9 +88,12 @@ export async function sendMessageToAgent(input: string) {
   
   try {
     const agent = await getAgentInstance();
-    const config = { configurable: { thread_id: "Solana Agent Kit!" } };
+    const config = { 
+      version: "v2",
+      configurable: { thread_id: "Solana Agent Kit!" } 
+    };
     
-    return agent.stream(
+    return agent.streamEvents(
       {
         messages: [new HumanMessage(input)],
       },

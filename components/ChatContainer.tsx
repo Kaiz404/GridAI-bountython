@@ -1,103 +1,147 @@
-"use client"
+"use client";
 
-import React from "react"
-import { Card } from "@/components/ui/card"
-import { MessageList } from "./MessageList"
-import { ChatInput } from "./ChatInput"
-import type { Message } from "./MessageBubble"
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { MessageList } from "./MessageList";
+import { ChatInput } from "./ChatInput";
+import type { Message } from "./MessageBubble";
+import { useAgent } from "./AgentProvider";
+import { Loader2 } from "lucide-react"; // Import the loader icon
 
-// Sample data for initial messages
+// Initial greeting message
 const initialMessages: Message[] = [
   {
     id: "1",
-    content: "Hi there! How can I help you with your trading today?",
+    content: "Hi there! I'm your trading assistant. How can I help you today?",
     sender: "other",
     senderName: "Trading Assistant",
-    timestamp: "10:30 AM",
+    timestamp: new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
   },
-  {
-    id: "2",
-    content: "I'm looking to understand my recent trading performance.",
-    sender: "user",
-    senderName: "You",
-    timestamp: "10:31 AM",
-  },
-  {
-    id: "3",
-    content:
-      "Great! I can see that your portfolio has a 12.45% profit this month. Would you like me to analyze your most successful trades?",
-    sender: "other",
-    senderName: "Trading Assistant",
-    timestamp: "10:32 AM",
-  },
-]
+];
 
 export function ChatContainer() {
-  const [messages, setMessages] = React.useState<Message[]>(initialMessages)
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [messages, setMessages] = React.useState<Message[]>(initialMessages);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { loading, initialized, error, sendMessage, abortCurrentRequest } =
+    useAgent();
 
   const handleSendMessage = (content: string) => {
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content,
-      sender: "user",
-      senderName: "You",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    }
+    console.log("HANDLING SEND MESSAGE", content);
+    try {
+      // Add user message
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        content,
+        role: "user",
+        senderName: "You",
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
 
-    setMessages((prev) => [...prev, userMessage])
-
-    // Simulate response
-    setIsLoading(true)
-    setTimeout(() => {
-      const botMessage: Message = {
+      // Add loading message
+      const loadingMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: getAutoResponse(content),
-        sender: "other",
+        content: "Thinking...",
+        role: "assistant",
         senderName: "Trading Assistant",
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        isLoading: true,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+
+      setMessages((prev) => [...prev, userMessage, loadingMessage]);
+      setIsLoading(true);
+
+      async function processResponse(message: string) {
+        // Call the agent API to get the response
+        const responseData = await sendMessage(message);
+
+        // Remove the loading message and add the real response
+        setMessages((prev) => {
+          const filteredMessages = prev.filter((msg) => !msg.isLoading);
+          return [
+            ...filteredMessages,
+            {
+              id: Date.now().toString(),
+              content: responseData.content || responseData.toString(),
+              role: "assistant",
+              senderName: "Trading Assistant",
+              timestamp: new Date().toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+            },
+          ];
+        });
       }
 
-      setMessages((prev) => [...prev, botMessage])
-      setIsLoading(false)
-    }, 1000)
-  }
+      processResponse(content);
+    } catch (error: any) {
+      // Handle error
+      console.error("Error sending message:", error);
+
+      // Remove the loading message and add error message
+      setMessages((prev) => {
+        const filteredMessages = prev.filter((msg) => !msg.isLoading);
+        return [
+          ...filteredMessages,
+          {
+            id: Date.now().toString(),
+            content: `Error: ${error.message || "Failed to get response"}`,
+            role: "system",
+            isError: true,
+            timestamp: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          },
+        ];
+      });
+
+      toast.error("Failed to get response from assistant");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Card className="w-full h-full flex flex-col bg-[#2a2a2a] border-[#3a3a3a] overflow-hidden">
       <div className="p-4 border-b border-[#3a3a3a]">
-        <h2 className="text-lg font-semibold text-gray-200">Trading Assistant</h2>
-        <p className="text-sm text-gray-400">Ask questions about your trading activity</p>
+        <h2 className="text-lg font-semibold text-gray-200 flex items-center">
+          Trading Assistant
+          {!initialized && (
+            <span className="ml-2 text-yellow-400 text-xs flex items-center">
+              <Loader2 className="h-3 w-3 animate-spin mr-1" />
+              initializing...
+            </span>
+          )}
+        </h2>
+        <p className="text-sm text-gray-400">
+          {error
+            ? `Error: ${error}`
+            : "Ask questions about your trading activity"}
+        </p>
       </div>
 
-      <MessageList messages={messages} />
-
+      {!initialized ? (
+        <div className="flex-1 flex flex-col items-center justify-center p-6">
+          <Loader2 className="h-12 w-12 animate-spin text-yellow-400" />
+          <p className="mt-4 text-gray-400 text-sm">
+            Initializing your trading assistant...
+          </p>
+          <p className="text-gray-500 text-xs mt-2">This may take a moment</p>
+        </div>
+      ) : (
+        <MessageList messages={messages} />
+      )}
       <ChatInput onSendMessage={handleSendMessage} disabled={isLoading} />
     </Card>
-  )
+  );
 }
-
-// Helper function to generate automatic responses
-function getAutoResponse(message: string): string {
-  const lowerMessage = message.toLowerCase()
-
-  if (lowerMessage.includes("profit") || lowerMessage.includes("performance")) {
-    return "Your overall profit is up 12.45% this month. Your best performing trade was Product B with a 28% return."
-  }
-
-  if (lowerMessage.includes("buy") || lowerMessage.includes("purchase")) {
-    return "Based on your trading history, you've made 876 purchases this month. Would you like recommendations for your next investment?"
-  }
-
-  if (lowerMessage.includes("sell") || lowerMessage.includes("sold")) {
-    return "You've completed 1,245 sell transactions this month, with an average profit margin of 8.3%."
-  }
-
-  if (lowerMessage.includes("help") || lowerMessage.includes("support")) {
-    return "I can help you analyze your trading performance, understand market trends, or provide insights on specific transactions. What would you like to know?"
-  }
-
-  return "I understand. Is there anything specific about your trading activity you'd like to know more about?"
-}
-

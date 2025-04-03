@@ -1,56 +1,95 @@
-# SolanaAgentKit 🦜️🔗 LangChain + Next.js Starter Template
+# GridBot AI 🤖 - AI-Powered Grid Trading Platform for Solana
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/michaelessiet/solana-agent-nextjs-starter-langchain)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsendaifun%2Fsolana-agent-kit%2Ftree%2Fmain%2Fexamples%2Fagent-kit-nextjs-langchain&env=OPENAI_API_KEY,RPC_URL,SOLANA_PRIVATE_KEY&project-name=solana-agent-kit&repository-name=sak-yourprojectname)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsolana-bountython%2Fgridbot-ai&env=OPENAI_API_KEY,RPC_URL,SOLANA_PRIVATE_KEY&project-name=gridbot-ai&repository-name=gridbot-ai)
 
-This template scaffolds a SolanaAgentKit + LangChain.js + Next.js starter app.
+## 🤖 GridBot AI - Smart Trading on Solana
 
-The agent uses [LangGraph.js](https://langchain-ai.github.io/langgraphjs/), LangChain's framework for building agentic workflows. They use preconfigured helper functions to minimize boilerplate, but you can replace them with custom graphs as desired.
+GridBot AI is an advanced trading application that combines the power of artificial intelligence with grid trading strategies on the Solana blockchain.
 
-![Demo GIF](/public/images/agent-convo.gif)
+![Dashboard Screenshot](/public/images/dashboard-screenshot.png)
 
-It's free-tier friendly too! Check out the [bundle size stats below](#-bundle-size).
+## ✨ Features
+
+- **AI-Powered Grid Trading** - Let AI analyze market trends and create optimized grid strategies
+- **Automated Trading** - Set up grid trading configurations that automatically execute buys and sells
+- **Intuitive Interface** - User-friendly dashboard to monitor performance and manage trading grids
+- **Real-time Analytics** - Track profits, transaction history, and performance statistics
+- **Interactive AI Assistant** - Chat with your personal trading assistant to get insights or make adjustments
 
 ## 🚀 Getting Started
 
-First, clone this repo and download it locally.
+### Prerequisites
 
-Next, you'll need to set up environment variables in your repo's `.env.local` file. Copy the `.env.example` file to `.env.local`.
-To start, you'll just need to add your OpenAI API key, Solana RPC URL and wallet private key in base 58 string form.
+- Solana wallet with SOL for transactions and gas fees
+- OpenAI API key for AI functionality
 
-Next, install the required packages using your preferred package manager (e.g. `pnpm`).
+### Setup
+
+1. Clone this repository and navigate to the project directory
+2. Copy `.env.example` to `.env.local` and add your:
+    - `OPENAI_API_KEY` - OpenAI API key
+    - `RPC_URL` - Solana RPC endpoint
+    - `SOLANA_PRIVATE_KEY` - Your wallet private key in base58 string format
+
+3. Install dependencies:
 
 ```bash
 pnpm install
 ```
 
-Now you're ready to run the development server:
+4. Start the development server:
 
 ```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result! Ask the bot something and you'll see a streamed response:
+5. Open [http://localhost:3000](http://localhost:3000) to see the application
 
-![A streaming conversation between the user and the AI](/public/images/chat-conversation.png)
+## 💡 How Grid Trading Works
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Grid trading is a strategy that places buy and sell orders at predetermined price intervals (the "grid"). When prices move up and down within this range:
 
-Backend logic lives in `app/api/chat/route.ts`. From here, you can change the prompt and model, or add other modules and logic.
+- Buy orders are executed when price drops to a grid line
+- Sell orders are executed when price rises to a grid line
+
+This approach profits from market volatility without needing to predict market direction.
+
+![Grid Trading Strategy](/public/images/grid-strategy.png)
+
+## 🧠 AI Integration
+
+Our AI assistant helps you:
+
+- Analyze market conditions and suggest optimal grid parameters
+- Monitor performance and recommend adjustments
+- Provide explanations about trading concepts
+- Execute trades and manage your grid configurations
+
+## 📈 Performance
+
+GridBot AI has been designed to capitalize on sideways markets while mitigating risks during strong trend movements.
+
+## 🛡️ Security
+
+- All trading operations happen on-chain with full transparency
+- Your funds remain in your control at all times
+- Private keys are never shared with third parties
 
 ## 📚 Learn More
 
-To learn more about what you can do with SolanaAgentKit and LangChain.js, check out the docs here:
+- [Solana Agent Kit Documentation](https://github.com/solana-foundation/agent-kit)
+- [Grid Trading Strategy Guide](https://learn.bybit.com/trading/grid-trading-explained/)
 
-- https://github.com/sendaifun/solana-agent-kit
-- https://js.langchain.com/docs/
+## 🤝 Contributing
 
-## ▲ Deploy on Vercel
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-When ready, you can deploy your app on the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+## 📄 License
 
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Thank You!
+## 🙏 Acknowledgments
 
-Thanks for reading! If you have any questions or comments, please drop an issue on this repo or reach out to us on [X](https://x.com/sendaifun)
+Built with Solana Agent Kit, LangChain.js, and Next.js.
+
+Special thanks to the Solana Foundation and the Solana Bountython community.

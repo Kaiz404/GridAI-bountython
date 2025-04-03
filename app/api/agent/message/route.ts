@@ -16,27 +16,17 @@ export async function POST(request: Request) {
     
     // Process the stream to collect responses
     const responseChunks = [];
+
+    let agentResponse = "";
     
     for await (const chunk of streamIterator) {
-      if ("agent" in chunk && chunk.agent.messages && chunk.agent.messages.length > 0) {
-        responseChunks.push({
-          content: chunk.agent.messages[0].content || "",
-          type: "message"
-        });
-      } else if ("tools" in chunk) {
-        responseChunks.push({
-          content: JSON.stringify(chunk),
-          type: "tool"
-        });
-      } else {
-        responseChunks.push({
-          content: JSON.stringify(chunk),
-          type: "other"
-        });
-      }
+      // console.log("Received chunk:", chunk);
+      if (chunk.event === "on_chat_model_end") {
+        agentResponse += chunk.data.output["content"];
+      } 
     }
     
-    return NextResponse.json({ responseChunks });
+    return NextResponse.json({ agentResponse });
   } catch (error: any) {
     console.error("Error in agent message API:", error);
     return NextResponse.json(
