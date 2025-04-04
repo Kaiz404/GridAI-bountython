@@ -428,7 +428,13 @@ export async function setupSOLUSDCGrid(): Promise<void> {
       upperLimit: 0.004,  // Upper price limit ($110)
       lowerLimit: 0.0025,   // Lower price limit ($90)
       gridCount: 20,      // Number of grid levels
-      quantityInvested: 0.05  // Amount in SOL to invest in each grid level
+      quantityInvested: 0.05,  // Amount in SOL to invest in each grid level
+      profit: 0,  // Add the missing profit property
+      // Add any other required properties from the IGrid type that aren't in the omitted list
+      currentPrice: undefined,
+      currentGridIndex: undefined,
+      sourceTokenAmount: undefined,
+      targetTokenAmount: undefined
     };
     
     // Call the createGrid function

@@ -85,6 +85,14 @@ export function TokenForm({ grid }: TokenFormProps) {
           lowerLimit: formData.lowerLimit,
           gridCount: formData.gridNumber,
           quantityInvested: formData.solAmount,
+
+          profit: 0, // Required property
+          currentPrice: undefined, // If required
+          currentGridIndex: undefined, // If required
+          sourceTokenAmount: undefined, // If required
+          targetTokenAmount: undefined, // If required
+          // Optional levels property
+          levels: {},
         };
 
         const createdGrid = await createGrid(newGridData);

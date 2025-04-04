@@ -4,6 +4,8 @@ import dbConnect from "../../database";
 import { IGrid } from "../../database/models/grid.model";
 import Grid from "../../database/models/grid.model";
 import { createGrid } from "@/lib/db_actions/grid";
+import { addressToSymbolMap } from "@/lib/tokenSymbols";
+import { addressToLogoMap } from "@/lib/tokenLogos";
 
 /**
  * A LangChain tool that creates a new grid trading configuration
@@ -74,16 +76,26 @@ export class CreateGridTool extends Tool {
         throw new Error("Grid count must be greater than 0");
       }
 
+      // Set default source token ID to Solana if not provided
+      const sourceTokenId = parsedInput.sourceTokenId || "So11111111111111111111111111111111111111112";
+      
+      // Get token symbols from address map or use defaults
+      const sourceTokenSymbol = addressToSymbolMap[sourceTokenId] || "SOL";
+      const targetTokenSymbol = addressToSymbolMap[parsedInput.targetTokenId] || "Unknown";
+
       // Create the grid
       const createdGrid = await createGrid({
-        sourceTokenId: parsedInput.sourceTokenId,
+        sourceTokenId: sourceTokenId,
         targetTokenId: parsedInput.targetTokenId,
+        sourceTokenSymbol: sourceTokenSymbol,
+        targetTokenSymbol: targetTokenSymbol,
         upperLimit: Number(parsedInput.upperLimit),
         lowerLimit: Number(parsedInput.lowerLimit),
         gridCount: Number(parsedInput.gridCount),
         quantityInvested: Number(parsedInput.quantityInvested),
         currentPrice: Number(parsedInput.currentPrice),
-        levels: parsedInput.levels
+        profit: 0, // Initialize profit as 0
+        levels: parsedInput.levels || {} // Ensure levels is an object if not provided
       });
 
       // Return success response
@@ -93,7 +105,9 @@ export class CreateGridTool extends Tool {
         gridId: createdGrid._id,
         details: {
           sourceTokenId: createdGrid.sourceTokenId,
+          sourceTokenSymbol: createdGrid.sourceTokenSymbol,
           targetTokenId: createdGrid.targetTokenId,
+          targetTokenSymbol: createdGrid.targetTokenSymbol,
           upperLimit: createdGrid.upperLimit,
           lowerLimit: createdGrid.lowerLimit,
           gridCount: createdGrid.gridCount,
