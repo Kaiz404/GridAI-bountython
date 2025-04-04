@@ -5,8 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createGrid } from "@/lib/db_actions/grid";
+import { type IGrid } from "@/lib/database/models/grid.model";
 
-export function TokenForm({ grid }: IGrid) {
+interface TokenFormProps {
+  grid: IGrid;
+}
+
+export function TokenForm({ grid }: TokenFormProps) {
   // Initialize state for form fields
   const [formData, setFormData] = useState({
     upperLimit: grid.upperLimit,
@@ -43,27 +48,27 @@ export function TokenForm({ grid }: IGrid) {
         throw new Error("Please fill in all fields");
       }
 
-      if (parseFloat(formData.upperLimit) <= parseFloat(formData.lowerLimit)) {
+      if (formData.upperLimit <= formData.lowerLimit) {
         throw new Error("Upper limit must be greater than lower limit");
       }
 
-      if (parseInt(formData.gridNumber) <= 0) {
-        throw new Error("Grid number must be greater than 0");
+      if (formData.gridNumber <= 0 || !Number.isInteger(formData.gridNumber)) {
+        throw new Error("Grid number must be a positive integer");
       }
 
-      if (parseFloat(formData.solAmount) <= 0) {
+      if (formData.solAmount <= 0) {
         throw new Error("SOL amount must be greater than 0");
       }
 
       // Simulate API call with a delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Log the submitted data
+      // Log the submitted data - no need for parsing
       console.log("Grid settings submitted:", {
-        upperLimit: parseFloat(formData.upperLimit),
-        lowerLimit: parseFloat(formData.lowerLimit),
-        gridNumber: parseInt(formData.gridNumber),
-        solAmount: parseFloat(formData.solAmount),
+        upperLimit: formData.upperLimit,
+        lowerLimit: formData.lowerLimit,
+        gridNumber: formData.gridNumber,
+        solAmount: formData.solAmount,
       });
 
       if (grid.currentPrice) {
@@ -76,15 +81,10 @@ export function TokenForm({ grid }: IGrid) {
           sourceTokenId: grid.sourceTokenId,
           targetTokenId: grid.targetTokenId,
 
-          // upperLimit: 0.004,  // Upper price limit ($110)
-          // lowerLimit: 0.0025,   // Lower price limit ($90)
-          // gridCount: 20,      // Number of grid levels
-          // quantityInvested: 0.05  // Amount in SOL to invest in each grid level
-
-          upperLimit: parseFloat(formData.upperLimit),
-          lowerLimit: parseFloat(formData.lowerLimit),
-          gridCount: parseInt(formData.gridNumber),
-          quantityInvested: parseFloat(formData.solAmount),
+          upperLimit: formData.upperLimit,
+          lowerLimit: formData.lowerLimit,
+          gridCount: formData.gridNumber,
+          quantityInvested: formData.solAmount,
         };
 
         const createdGrid = await createGrid(newGridData);
