@@ -43,7 +43,7 @@ export function CryptoActivity(grid: CryptoActivityCardProps) {
 
             <div
               className={`py-1 px-2 rounded-xl text-sm ${
-                randomValue > 5
+                parseFloat(randomValue) > 5
                   ? "text-green-400 bg-green-300/20"
                   : grid.currentValue < grid.quantityInvested
                   ? "text-red-500 bg-red-400/20 bg-opacity-20"
@@ -51,7 +51,7 @@ export function CryptoActivity(grid: CryptoActivityCardProps) {
               }`}
             >
               <span className="flex items-center">
-                {randomValue > 5 ? (
+                {parseFloat(randomValue) > 5 ? (
                   <ArrowUp className="h-3 w-3 mr-1" />
                 ) : (
                   <ArrowDown className="h-3 w-3 mr-1" />
@@ -67,7 +67,7 @@ export function CryptoActivity(grid: CryptoActivityCardProps) {
       <div className="flex-col h-full w-fit justify-center flex gap-2 text-base md:text-lg items-end p-1">
         <p className="text-gray-200">
           {grid.targetTokenAmount
-            ? `${grid.targetTokenAmount?.toFixed(2) / 10}`
+            ? `${(grid.targetTokenAmount / 10).toFixed(2)}`
             : "No data yet"}
         </p>
         <p className="text-gray-400 text-sm md:text-base">

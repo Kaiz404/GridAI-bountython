@@ -65,7 +65,9 @@ export function ChatContainer() {
 
         // Remove the loading message and add the real response
         setMessages((prev: any[]) => {
-          const filteredMessages = prev.filter((msg) => !msg.isLoading);
+          const filteredMessages = prev.filter(
+            (msg) => !(msg.content === "Thinking..."),
+          );
           return [
             ...filteredMessages,
             {
@@ -87,12 +89,11 @@ export function ChatContainer() {
       // Handle error
       console.error("Error sending message:", error);
 
-      // First remove the loading message
-      setMessages((prev) => prev.filter((msg) => !msg.isLoading));
-
       // Remove the loading message and add error message
       setMessages((prev: any[]) => {
-        const filteredMessages = prev.filter((msg) => !msg.isLoading);
+        const filteredMessages = prev.filter(
+          (msg) => !(msg.content === "Thinking..."),
+        );
         return [
           ...filteredMessages,
           {
