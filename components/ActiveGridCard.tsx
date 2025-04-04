@@ -88,6 +88,7 @@ export function ActiveGridsCard() {
     // updatedAt: { type: Number, default: Date.now }
 
     const newGrid: IGrid = {
+      _id: "1234567890",
       sourceTokenSymbol: "SOL",
       targetTokenSymbol: addressToSymbolMap[inputValue] || "Unknown",
       sourceTokenId: "So11111111111111111111111111111111111111112",
@@ -96,6 +97,17 @@ export function ActiveGridsCard() {
       lowerLimit: 0,
       gridCount: 0,
       quantityInvested: 0,
+      levels: {}, // Empty object for levels
+      totalBuys: 0,
+      totalSells: 0,
+      profit: 0,
+      currentValue: 0,
+      currentPrice: undefined,
+      currentGridIndex: undefined,
+      sourceTokenAmount: undefined,
+      targetTokenAmount: undefined,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     };
 
     setSelectedGrid(newGrid);

@@ -69,13 +69,15 @@ export function ActivityCard({
           </div>
           <div className="flex justify-between items-center mt-1">
             <span className="text-sm text-gray-400">
-              {new Date(executedAt).toLocaleString("en-US", {
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-              })}
+              {executedAt
+                ? new Date(executedAt).toLocaleString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })
+                : "Loading..."}
             </span>
             <a
               href={`https://solscan.io/tx/${transactionHash}`}
