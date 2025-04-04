@@ -66,6 +66,40 @@ export function ActiveGridsCard() {
   };
 
   const handleCreateNewGrid = () => {
+    // _id: { type: String, required: true },
+    // sourceTokenSymbol: { type: String, required: true },
+    // targetTokenSymbol: { type: String, required: true },
+    // sourceTokenId: { type: String, required: true },
+    // targetTokenId: { type: String, required: true },
+    // upperLimit: { type: Number, required: true },
+    // lowerLimit: { type: Number, required: true },
+    // gridCount: { type: Number, required: true },
+    // quantityInvested: { type: Number, required: true },
+    // levels: { type: Object, default: {} },
+    // totalBuys: { type: Number, default: 0 },
+    // totalSells: { type: Number, default: 0 },
+    // profit: { type: Number, default: 0 }, // Total profit in percentage
+    // currentValue: { type: Number, default: 0 },
+    // currentPrice: { type: Number, default: null },
+    // currentGridIndex: { type: Number, default: null },
+    // sourceTokenAmount: { type: Number, default: null },
+    // targetTokenAmount: { type: Number, default: null },
+    // createdAt: { type: Number, default: Date.now },
+    // updatedAt: { type: Number, default: Date.now }
+
+    const newGrid: IGrid = {
+      sourceTokenSymbol: "SOL",
+      targetTokenSymbol: addressToSymbolMap[inputValue] || "Unknown",
+      sourceTokenId: "So11111111111111111111111111111111111111112",
+      targetTokenId: inputValue,
+      upperLimit: 0,
+      lowerLimit: 0,
+      gridCount: 0,
+      quantityInvested: 0,
+    };
+
+    setSelectedGrid(newGrid);
+    setIsModalOpen(true);
     console.log("Create New Grid with Token ID:", inputValue); // Log the input value
     // Add your logic here for creating a new grid
   };
@@ -83,12 +117,12 @@ export function ActiveGridsCard() {
               className="space-y-4 w-[25%]"
               onSubmit={(e) => e.preventDefault()}
             >
-              <div className="space-y-2 flex w-full gap-4">
+              <div className="flex w-full gap-4 items-center">
                 <Input
                   id="amount"
                   type="text"
                   placeholder={`Enter Token ID`}
-                  className="bg-[#333333] border-[#444444] w-full"
+                  className="bg-[#333333] border-[#444444] w-full text-white"
                   value={inputValue} // Bind the input value to state
                   onChange={handleInputChange} // Handle input changes
                 />

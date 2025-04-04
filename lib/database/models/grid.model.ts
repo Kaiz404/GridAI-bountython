@@ -1,10 +1,11 @@
-'use server';
-
-import { model, models, Schema, Model } from "mongoose";
-
+import { model, Schema  } from 'mongoose';
+import type { Model } from 'mongoose';
+import mongoose from "mongoose";
 
 export interface IGrid {
     _id: string;
+    sourceTokenSymbol: string;
+    targetTokenSymbol: string;
     sourceTokenId: string;
     targetTokenId: string;
     upperLimit: number;
@@ -14,6 +15,7 @@ export interface IGrid {
     levels: Record<number, number>; // Dictionary where keys are strings and values are prices (numbers)
     totalBuys: number;
     totalSells: number;
+    profit: number; // Total profit in percentage
     currentValue: number;  // Current value of the grid in USDC
     currentPrice?: number;
     currentGridIndex?: number;
@@ -26,6 +28,8 @@ export interface IGrid {
 const gridSchema = new Schema<IGrid>(
     {
         _id: { type: String, required: true },
+        sourceTokenSymbol: { type: String, required: true },
+        targetTokenSymbol: { type: String, required: true },
         sourceTokenId: { type: String, required: true },
         targetTokenId: { type: String, required: true },
         upperLimit: { type: Number, required: true },
@@ -35,6 +39,7 @@ const gridSchema = new Schema<IGrid>(
         levels: { type: Object, default: {} },
         totalBuys: { type: Number, default: 0 },
         totalSells: { type: Number, default: 0 },
+        profit: { type: Number, default: 0 }, // Total profit in percentage
         currentValue: { type: Number, default: 0 },
         currentPrice: { type: Number, default: null },
         currentGridIndex: { type: Number, default: null },
@@ -52,6 +57,6 @@ const gridSchema = new Schema<IGrid>(
     }
 )
 
-const Grid: Model<IGrid> = models.Grid || model<IGrid>('Grid', gridSchema);
+const Grid: Model<IGrid> = mongoose.models.Grid || model<IGrid>('Grid', gridSchema);
 
 export default Grid;

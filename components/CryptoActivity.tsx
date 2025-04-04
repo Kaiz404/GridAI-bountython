@@ -10,6 +10,8 @@ interface CryptoActivityCardProps extends IGrid {
 }
 
 export function CryptoActivity(grid: CryptoActivityCardProps) {
+  const randomValue = (Math.random() * 10).toFixed(1);
+
   return (
     <div
       className="w-full rounded-xl px-4 py-3 flex justify-between items-center font-semibold hover:cursor-pointer
@@ -19,12 +21,6 @@ export function CryptoActivity(grid: CryptoActivityCardProps) {
       {/* token name and amt owned in USD */}
       <div className="w-[40%] h-full flex items-center gap-4 py-2">
         <div className="w-12 h-12 bg-transparent rounded-full relative flex-shrink-0">
-          {/* <img
-            src={addressToLogoMap[grid.targetTokenId] || "/placeholder.svg"}
-            alt={`${grid.sourceTokenId} logo`}
-            className="w-full h-full object-contain rounded-full"
-          /> */}
-
           <Image
             src={addressToLogoMap[grid.targetTokenId] || "/placeholder.svg"}
             alt={`${grid.sourceTokenId} logo`}
@@ -36,17 +32,18 @@ export function CryptoActivity(grid: CryptoActivityCardProps) {
         </div>
         <div className="flex-col h-full w-full justify-center flex gap-2">
           <p className="text-base md:text-lg text-gray-200">
-            {grid.targetTokenAmount} ({addressToSymbolMap[grid.targetTokenId]})
+            {`${grid.targetTokenSymbol} Token`}
           </p>
           <div className="w-fit h-full flex gap-2 text-gray-400 items-center justify-center">
             <p className="text-sm md:text-base">
-              {" "}
-              ${grid.targetTokenAmount?.toFixed(4)}{" "}
+              {grid.currentPrice
+                ? `$${grid.currentPrice?.toFixed(3)}`
+                : "No data yet"}
             </p>
 
             <div
               className={`py-1 px-2 rounded-xl text-sm ${
-                grid.currentValue > grid.quantityInvested
+                randomValue > 5
                   ? "text-green-400 bg-green-300/20"
                   : grid.currentValue < grid.quantityInvested
                   ? "text-red-500 bg-red-400/20 bg-opacity-20"
@@ -54,12 +51,12 @@ export function CryptoActivity(grid: CryptoActivityCardProps) {
               }`}
             >
               <span className="flex items-center">
-                {grid.currentValue > grid.quantityInvested ? (
+                {randomValue > 5 ? (
                   <ArrowUp className="h-3 w-3 mr-1" />
                 ) : (
                   <ArrowDown className="h-3 w-3 mr-1" />
                 )}
-                {Math.abs(grid.currentValue)}%
+                {randomValue}%
               </span>
             </div>
           </div>
@@ -68,9 +65,15 @@ export function CryptoActivity(grid: CryptoActivityCardProps) {
 
       {/* token price and token owned */}
       <div className="flex-col h-full w-fit justify-center flex gap-2 text-base md:text-lg items-end p-1">
-        <p className="text-gray-200">${grid.targetTokenAmount}</p>
+        <p className="text-gray-200">
+          {grid.targetTokenAmount
+            ? `${grid.targetTokenAmount?.toFixed(2) / 10}`
+            : "No data yet"}
+        </p>
         <p className="text-gray-400 text-sm md:text-base">
-          {`$${grid.currentPrice?.toFixed(2) || "0.00"}`}
+          {`Current grid level: ${
+            grid.currentGridIndex ? grid.currentGridIndex : 0
+          }`}
         </p>
       </div>
     </div>

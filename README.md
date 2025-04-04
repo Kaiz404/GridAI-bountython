@@ -1,12 +1,12 @@
 # GridBot AI 🤖 - AI-Powered Grid Trading Platform for Solana
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsolana-bountython%2Fgridbot-ai&env=OPENAI_API_KEY,RPC_URL,SOLANA_PRIVATE_KEY&project-name=gridbot-ai&repository-name=gridbot-ai)
+[![Vercel Deployment](https://vercel.com/button)](https://gridai-4kwmssq3p-kais-projects-42abda1c.vercel.app)
 
 ## 🤖 GridBot AI - Smart Trading on Solana
 
 GridBot AI is an advanced trading application that combines the power of artificial intelligence with grid trading strategies on the Solana blockchain.
 
-![Dashboard Screenshot](/public/images/dashboard-screenshot.png)
+![Dashboard Screenshot](/public/images/hero.png)
 
 ## ✨ Features
 

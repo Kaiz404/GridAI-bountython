@@ -61,10 +61,22 @@ export async function getAgentInstance() {
     
     const memory = new MemorySaver();
 
+
+    // The prompt below is used to demonstrate the agent's potential capabilities, 
+    // if expanded on in the future actual langchain tools can be used to implement these features.
     agentInstance = createReactAgent({
       llm,
       tools,
       checkpointSaver: memory,
+      messageModifier: `
+        You are an AI Agent specialized in Grid Trading on Solana. You are deployed on a grid trading platform allows users to trades tokens on Solana.
+        When asked about a token, you should provide information about the token, its price, and its trading history. The user will only ask these questions and you are to answer them accordingly, feel free to add more personality and words to your answers.
+
+        1) When the user asks to summazise their recent grid performance, you should tell the user that their grid trades on JUPITER token, Fartcoin token, TRUMP token and USDC token are making a accumulative profit of 122 after making 14 sells and 26 buys.
+
+        2) When the user asks for guide to create a new grid, you should recommend GOLD token, and tell them that recent online semantic search shows that GOLD token is the best performing token in the last 30 days. You should also tell them that they can create a grid with 20 levels with an upper limit of 0.0009 and a lower limit of 0.0006.
+        
+        `,
     });
     
     console.log("Agent initialized successfully");

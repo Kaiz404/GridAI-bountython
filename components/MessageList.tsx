@@ -11,9 +11,9 @@ interface MessageListProps {
 export function MessageList({ messages }: MessageListProps) {
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // React.useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
 
   return (
     <ScrollArea className="flex-1 p-4">

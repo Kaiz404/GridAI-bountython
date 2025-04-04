@@ -1,10 +1,14 @@
 "use client";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+} from "@/components/ui/dialog";
 import { ChatContainer } from "./ChatContainer";
 import { TokenSummary } from "./TokenSummary";
 import { PriceChart } from "./PriceChart";
 import { TokenForm } from "./TokenForm";
-import type { TokenInfo } from "./CryptoActivity";
 import { RecentActivity } from "./RecentActivity";
 import DexChart from "./DexChart";
 import { IGrid } from "@/lib/database/models/grid.model";
@@ -12,6 +16,7 @@ import { addressToSymbolMap } from "@/lib/tokenSymbols";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getRecentTrades } from "@/lib/db_actions/trade";
+import { ITrade } from "@/lib/database/models/trade.model";
 
 interface TokenModalProps {
   isOpen: boolean;
@@ -85,7 +90,7 @@ interface TokenModalProps {
 
 export function TokenModal({ isOpen, onClose, grid }: TokenModalProps) {
   const [loading, setLoading] = useState(true);
-  const [transactions, setTransactions] = useState<TokenInfo[]>([]);
+  const [transactions, setTransactions] = useState<ITrade[]>([]);
 
   // Fetch data function separated for reuse with interval
   const fetchData = async () => {
@@ -131,6 +136,12 @@ export function TokenModal({ isOpen, onClose, grid }: TokenModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[90vw] min-w-[90vw] h-[90vh] p-0 bg-[#1a1a1a] border-[#3a3a3a] overflow-auto">
+        {/* <DialogHeader className="absolute top-0 left-0 right-0 p-4 bg-[#1a1a1a] border-b border-[#3a3a3a] z-10">
+          <DialogTitle className="text-xl font-semibold text-gray-200">
+            {`${grid.targetTokenSymbol || grid.targetTokenId} Grid Details`}
+          </DialogTitle>
+        </DialogHeader> */}
+
         <div className="flex h-full">
           {/* Left side - Chat (30%) */}
           <div className="w-[30%] h-[800px] border-[#3a3a3a] overflow-hidden mt-8 ml-8">
@@ -158,12 +169,7 @@ export function TokenModal({ isOpen, onClose, grid }: TokenModalProps) {
 
                 {/* Token Form */}
                 <div className="w-full lg:w-[30%]">
-                  <TokenForm
-                    tokenSymbol={
-                      addressToSymbolMap[grid?.targetTokenId || "USDC"] ||
-                      "USDC"
-                    }
-                  />
+                  <TokenForm grid={grid} />
                 </div>
               </div>
 
@@ -173,7 +179,11 @@ export function TokenModal({ isOpen, onClose, grid }: TokenModalProps) {
                 <>
                   {/* Recent Activity - Fixed height to prevent overflow */}
                   <div className="flex-1 min-h-0 overflow-y-auto">
-                    <RecentActivity transactions={transactions} />
+                    <RecentActivity
+                      transactions={transactions.filter(
+                        (trade) => trade.outputTokenId === grid.targetTokenId,
+                      )}
+                    />
                   </div>
                 </>
               )}

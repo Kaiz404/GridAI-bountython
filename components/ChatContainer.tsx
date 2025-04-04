@@ -87,6 +87,9 @@ export function ChatContainer() {
       // Handle error
       console.error("Error sending message:", error);
 
+      // First remove the loading message
+      setMessages((prev) => prev.filter((msg) => !msg.isLoading));
+
       // Remove the loading message and add error message
       setMessages((prev: any[]) => {
         const filteredMessages = prev.filter((msg) => !msg.isLoading);
@@ -141,7 +144,7 @@ export function ChatContainer() {
           </p>
           <p className="text-gray-500 text-xs mt-2">This may take a moment</p>
         </div>
-      ) : ( 
+      ) : (
         <div className="flex-1 overflow-y-auto p-4 h-full">
           <MessageList messages={messages} />
         </div>

@@ -29,7 +29,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           {message.avatar && (
             <AvatarImage src={message.avatar} alt={message.senderName} />
           )}
-          <AvatarFallback className="bg-blue-600 text-white text-xs">
+          <AvatarFallback className="bg-blue-600 text-white text-xs w-full">
             {message.senderName
               .split(" ")
               .map((n) => n[0])
@@ -59,7 +59,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           {message.avatar && (
             <AvatarImage src={message.avatar} alt={message.senderName} />
           )}
-          <AvatarFallback className="bg-blue-600 text-white text-xs">
+          <AvatarFallback className="bg-blue-600 text-white text-xs w-full">
             {message.senderName
               .split(" ")
               .map((n) => n[0])

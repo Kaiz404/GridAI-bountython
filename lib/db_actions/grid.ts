@@ -329,7 +329,7 @@ export async function updateGridPriceLimits(
       upperLimit,
       lowerLimit,
       levels,
-      currentGridIndex,
+      currentGridIndex: currentGridIndex === null ? undefined : currentGridIndex,
       updatedAt: Date.now()
     };
     

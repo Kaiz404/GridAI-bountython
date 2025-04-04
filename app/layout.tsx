@@ -6,6 +6,7 @@ import { SparklesCore } from "@/components/sparkles";
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AgentProvider } from "@/components/AgentProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,8 @@ export default function RootLayout({
               <Navbar />
               <AgentProvider>{children}</AgentProvider>
             </div>
+
+            <Toaster />
           </ThemeProvider>
         </AppWalletProvider>
       </body>

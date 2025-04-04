@@ -15,11 +15,18 @@ import { Types } from "mongoose";
 
 export function ActivityCard({
   _id,
+  gridId, // Reference to the Grid
   side,
+  inputToken, // Token being traded (input token)
+  outputToken, // Token being received (output token)
+  inputTokenId,
+  outputTokenId,
   inputAmount,
-  inputToken,
+  outputAmount,
+  gridLevel,
   executedAt,
   transactionHash,
+  profit,
   compact = false,
 }: ITrade & { compact?: boolean }) {
   return (
@@ -49,18 +56,36 @@ export function ActivityCard({
         </div>
         <div className="flex-1">
           <div className="flex justify-between items-center">
-            <span className="font-medium text-gray-200">{inputToken}</span>
+            <span className="font-medium text-gray-200">
+              {side === "BUY" ? `Bought ${inputToken}` : `Sold ${inputToken}`}
+            </span>
             <span
               className={`font-semibold ${
                 side === "BUY" ? "text-blue-500" : "text-green-500"
               }`}
             >
-              {side === "BUY" ? "-" : "+"} ${inputAmount}
+              {side === "BUY" ? "-" : "+"} ${inputAmount.toFixed(2)}
             </span>
           </div>
           <div className="flex justify-between items-center mt-1">
-            <span className="text-xs text-gray-400">{executedAt}</span>
-            <span className="text-xs text-gray-400">{executedAt}</span>
+            <span className="text-sm text-gray-400">
+              {new Date(executedAt).toLocaleString("en-US", {
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </span>
+            <a
+              href={`https://solscan.io/tx/${transactionHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-blue-400 hover:text-blue-300 hover:underline"
+            >
+              View Txn: {transactionHash?.slice(0, 6)}...
+              {transactionHash?.slice(-4)}
+            </a>
           </div>
         </div>
       </div>

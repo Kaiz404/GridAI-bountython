@@ -107,7 +107,7 @@ export async function getTradeSummaryByGridId(gridId: string): Promise<{
 }
 
 export async function getRecentTrades(
-  limit: number = 10
+  limit: number = 50
 ): Promise<ITrade[]> {
   await dbConnect();
   
@@ -118,6 +118,16 @@ export async function getRecentTrades(
   
     return JSON.parse(JSON.stringify(trades.map(trade => trade.toObject({ getters: true }))));
   }
+
+export async function getAllTrades(): Promise<ITrade[]> {
+  await dbConnect();
+  
+  const trades = await Trade.find()
+    .sort({ createdAt: -1 })
+    .populate('gridId', 'inputToken outputToken');
+  
+  return JSON.parse(JSON.stringify(trades.map(trade => trade.toObject({ getters: true }))));
+}
 
 
 // // Example usage

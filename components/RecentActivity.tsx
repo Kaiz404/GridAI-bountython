@@ -30,8 +30,8 @@ export function RecentActivity({
           {transactions.slice(0, limit).map((transaction) => (
             <ActivityCard
               key={transaction._id}
-              {...transaction}
               compact={true}
+              {...transaction}
             />
           ))}
         </div>

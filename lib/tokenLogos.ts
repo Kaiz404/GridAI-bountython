@@ -11,4 +11,14 @@ export const addressToLogoMap: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png", // SOL
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v":
     "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=040", // USDC
+  "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN":
+  "https://asset-metadata-service-production.s3.amazonaws.com/asset_icons/f71f2a66644ee09456cc9d0c1acc6315f88202e05ade4a10daeaaa32f2cf67fa.png", // TRUMP
+  "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump": 
+  "https://dd.dexscreener.com/ds-data/tokens/solana/9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump.png?size=lg&key=8180d2", //Fartcoin
+  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN":
+  "https://s3.coinmarketcap.com/static-gravity/image/4dc5810324c74688a5a1b805f7506ec5.jpg", // JUP
+  "h9d3xhfvmgfoohydepqh4w3mopnvjcrze9vqaihkdqs7":
+  "https://dd.dexscreener.com/ds-data/tokens/solana/4TBi66vi32S7J8X1A6eWfaLHYmUXu7CStcEmsJQdpump.png?size=lg&key=52f22e", // Ghibli
+  "9YnfbEaXPaPmoXnKZFmNH8hzcLyjbRf56MQP7oqGpump":
+  "https://dd.dexscreener.com/ds-data/tokens/solana/9YnfbEaXPaPmoXnKZFmNH8hzcLyjbRf56MQP7oqGpump.png?size=lg&key=8c9afd", // Gold
 };
