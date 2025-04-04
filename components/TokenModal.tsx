@@ -4,7 +4,6 @@ import { ChatContainer } from "./ChatContainer";
 import { TokenSummary } from "./TokenSummary";
 import { PriceChart } from "./PriceChart";
 import { TokenForm } from "./TokenForm";
-import type { TokenInfo } from "./CryptoActivity";
 import { RecentActivity } from "./RecentActivity";
 import DexChart from "./DexChart";
 import { IGrid } from "@/lib/database/models/grid.model";
@@ -12,6 +11,7 @@ import { addressToSymbolMap } from "@/lib/tokenSymbols";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getRecentTrades } from "@/lib/db_actions/trade";
+import { ITrade } from "@/lib/database/models/trade.model";
 
 interface TokenModalProps {
   isOpen: boolean;
@@ -85,7 +85,7 @@ interface TokenModalProps {
 
 export function TokenModal({ isOpen, onClose, grid }: TokenModalProps) {
   const [loading, setLoading] = useState(true);
-  const [transactions, setTransactions] = useState<TokenInfo[]>([]);
+  const [transactions, setTransactions] = useState<ITrade[]>([]);
 
   // Fetch data function separated for reuse with interval
   const fetchData = async () => {

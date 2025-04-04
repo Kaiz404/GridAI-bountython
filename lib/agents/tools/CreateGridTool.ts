@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 import dbConnect from "../../database";
 import { IGrid } from "../../database/models/grid.model";
 import Grid from "../../database/models/grid.model";
+import { createGrid } from "@/lib/db_actions/grid";
 
 /**
  * A LangChain tool that creates a new grid trading configuration

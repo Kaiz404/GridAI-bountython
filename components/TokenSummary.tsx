@@ -3,8 +3,7 @@ import { Card } from "@/components/ui/card";
 import { DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
 import { MetricCard } from "./MetricCard";
 import Image from "next/image";
-import type { TokenInfo } from "./CryptoActivity";
-import type { IGrid } from "@/lib/``database/models/grid.model";
+import type { IGrid } from "@/lib/database/models/grid.model";
 import { addressToLogoMap } from "@/lib/tokenLogos";
 import { addressToSymbolMap } from "@/lib/tokenSymbols";
 
@@ -28,7 +27,7 @@ export function TokenSummary({ grid }: GridSummaryProps) {
         </div>
         <div className="flex flex-col">
           <h2 className="text-xl font-semibold text-gray-200">
-            {grid.targetToken} ({addressToSymbolMap[grid.targetTokenId]})
+            {grid.targetTokenAmount} ({addressToSymbolMap[grid.targetTokenId]})
           </h2>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-400 truncate max-w-[300px]">

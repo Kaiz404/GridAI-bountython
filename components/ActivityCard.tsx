@@ -59,8 +59,10 @@ export function ActivityCard({
             </span>
           </div>
           <div className="flex justify-between items-center mt-1">
-            <span className="text-xs text-gray-400">{executedAt}</span>
-            <span className="text-xs text-gray-400">{executedAt}</span>
+            <span className="text-xs text-gray-400">
+              {executedAt?.toLocaleDateString()}
+            </span>
+            <span className="text-xs text-gray-400">{`nhttps://solscan.io/tx/${transactionHash}`}</span>
           </div>
         </div>
       </div>
