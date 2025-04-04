@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { CryptoActivity } from "./CryptoActivity"
-import type { TokenInfo } from "./CryptoActivity"
-import { useState } from "react"
-import { TokenModal } from "./TokenModal"
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { CryptoActivity } from "./CryptoActivity";
+import type { TokenInfo } from "./CryptoActivity";
+import { useState } from "react";
+import { TokenModal } from "./TokenModal";
+import { IGrid } from "@/lib/database/models/grid.model";
 
 const sampleTokens: TokenInfo[] = [
   {
@@ -15,7 +16,8 @@ const sampleTokens: TokenInfo[] = [
     price_in_usd: 2312,
     amount_owned: 500,
     value_usd: 1156000,
-    token_logo: "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
+    token_logo:
+      "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
     token_symbol: "WETH",
   },
   {
@@ -25,7 +27,8 @@ const sampleTokens: TokenInfo[] = [
     price_in_usd: 43250,
     amount_owned: 12,
     value_usd: 519000,
-    token_logo: "https://tokens.1inch.io/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599.png",
+    token_logo:
+      "https://tokens.1inch.io/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599.png",
     token_symbol: "BTC",
   },
   {
@@ -35,7 +38,8 @@ const sampleTokens: TokenInfo[] = [
     price_in_usd: 0.58,
     amount_owned: 150000,
     value_usd: 87000,
-    token_logo: "https://tokens.1inch.io/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0.png",
+    token_logo:
+      "https://tokens.1inch.io/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0.png",
     token_symbol: "MATIC",
   },
   {
@@ -45,7 +49,8 @@ const sampleTokens: TokenInfo[] = [
     price_in_usd: 13.42,
     amount_owned: 3500,
     value_usd: 46970,
-    token_logo: "https://tokens.1inch.io/0x514910771af9ca656af840dff83e8264ecf986ca.png",
+    token_logo:
+      "https://tokens.1inch.io/0x514910771af9ca656af840dff83e8264ecf986ca.png",
     token_symbol: "LINK",
   },
   {
@@ -55,39 +60,52 @@ const sampleTokens: TokenInfo[] = [
     price_in_usd: 7.25,
     amount_owned: 5200,
     value_usd: 37700,
-    token_logo: "https://tokens.1inch.io/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984.png",
+    token_logo:
+      "https://tokens.1inch.io/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984.png",
     token_symbol: "UNI",
   },
-]
+];
 
-export function ActiveGrids() {
-  const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+interface ActiveGridsProps {
+  grids: IGrid[];
+}
+
+export function ActiveGrids({ grids }: ActiveGridsProps) {
+  const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleTokenClick = (token: TokenInfo) => {
-    setSelectedToken(token)
-    setIsModalOpen(true)
-  }
+    setSelectedToken(token);
+    setIsModalOpen(true);
+  };
 
   return (
     <>
-    <Card className="w-full h-1/2 p-6 bg-[#2a2a2a] border-[#3a3a3a] overflow-y-auto">
-      <div className="flex flex-col h-full">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-200">Active Grids</h2>
-        </div>
-        <ScrollArea className="flex-1 w-full pr-4">
-          <div className="grid-cols-2 grid gap-6">
-          {sampleTokens.map((token) => (
-            <CryptoActivity key={token.address} {...token} onClick={() => handleTokenClick(token)} />
-          ))}
+      <Card className="w-full h-1/2 p-6 bg-[#2a2a2a] border-[#3a3a3a] overflow-y-auto">
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-200">
+              Active Grids
+            </h2>
           </div>
-        </ScrollArea>
-      </div>
-    <TokenModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} token={selectedToken} />
-    </Card>
-
+          <ScrollArea className="flex-1 w-full pr-4">
+            <div className="grid-cols-2 grid gap-6">
+              {grids.map((grid) => (
+                <CryptoActivity
+                  key={grid._id}
+                  {...grid}
+                  onClick={() => handleTokenClick(grid.targetTokenId)}
+                />
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
+        <TokenModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          token={selectedToken}
+        />
+      </Card>
     </>
-  )
+  );
 }
-

@@ -1,33 +1,42 @@
-"use client"
-import { Card } from "@/components/ui/card"
-import { DollarSign, ShoppingCart, TrendingUp } from "lucide-react"
-import { MetricCard } from "./MetricCard"
-import type { TokenInfo } from "./CryptoActivity"
+"use client";
+import { Card } from "@/components/ui/card";
+import { DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
+import { MetricCard } from "./MetricCard";
+import Image from "next/image";
+import type { TokenInfo } from "./CryptoActivity";
+import type { IGrid } from "@/lib/``database/models/grid.model";
+import { addressToLogoMap } from "@/lib/tokenLogos";
+import { addressToSymbolMap } from "@/lib/tokenSymbols";
 
-interface TokenSummaryProps {
-  token: TokenInfo
+interface GridSummaryProps {
+  grid: IGrid;
 }
 
-export function TokenSummary({ token }: TokenSummaryProps) {
+export function TokenSummary({ grid }: GridSummaryProps) {
   return (
     <Card className="w-full p-6 bg-[#2a2a2a] border-[#3a3a3a]">
-      <div className="flex items-center gap-4 mb-6">
+      <div>
         <div className="w-16 h-16 bg-transparent rounded-full relative flex-shrink-0">
-          <img
-            src={token.token_logo || "/placeholder.svg"}
-            alt={`${token.name} logo`}
-            className="w-full h-full object-contain rounded-full"
+          <Image
+            src={addressToLogoMap[grid.targetTokenId] || "/placeholder.svg"}
+            alt={`${grid.sourceTokenId} logo`}
+            className="object-contain rounded-full"
+            fill
+            sizes="64px"
+            priority
           />
         </div>
         <div className="flex flex-col">
           <h2 className="text-xl font-semibold text-gray-200">
-            {token.name} ({token.token_symbol})
+            {grid.targetToken} ({addressToSymbolMap[grid.targetTokenId]})
           </h2>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400 truncate max-w-[300px]">{token.address}</span>
+            <span className="text-sm text-gray-400 truncate max-w-[300px]">
+              {grid.targetTokenId}
+            </span>
             <button
               className="text-xs text-blue-400 hover:text-blue-300"
-              onClick={() => navigator.clipboard.writeText(token.address)}
+              onClick={() => navigator.clipboard.writeText(grid.targetTokenId)}
             >
               Copy
             </button>
@@ -37,7 +46,11 @@ export function TokenSummary({ token }: TokenSummaryProps) {
 
       <div className="grid grid-cols-3 gap-4">
         {/* Total Value */}
-        <MetricCard title="Total Value" value={`$${token.value_usd.toLocaleString()}`} icon={DollarSign} />
+        <MetricCard
+          title="Total Value"
+          value={`$${grid.currentValue}`}
+          icon={DollarSign}
+        />
 
         {/* ROI
         <MetricCard
@@ -47,22 +60,20 @@ export function TokenSummary({ token }: TokenSummaryProps) {
           valueColor={token.roi >= 0 ? "text-green-500" : "text-red-500"}
         /> */}
 
-
         {/* Amount Owned */}
         <MetricCard
           title="Total Buys"
-          value={`${token.amount_owned.toLocaleString()} ${token.token_symbol}`}
+          value={`${grid.totalBuys}`}
           icon={ShoppingCart}
         />
 
         {/* Amount Owned */}
         <MetricCard
           title="Total Sells"
-          value={`${token.amount_owned.toLocaleString()} ${token.token_symbol}`}
+          value={`${grid.totalSells}`}
           icon={ShoppingCart}
         />
       </div>
     </Card>
-  )
+  );
 }
-

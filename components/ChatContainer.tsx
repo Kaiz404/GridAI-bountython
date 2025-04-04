@@ -104,16 +104,15 @@ export function ChatContainer() {
           },
         ];
       });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    // Import toast if it's not already imported
-    const toast = {
-      error: (message: string) => console.error(message)
-    };
+  // Import toast if it's not already imported
+  const toast = {
+    error: (message: string) => console.error(message),
+  };
 
   return (
     <Card className="w-full h-full flex flex-col bg-[#2a2a2a] border-[#3a3a3a] overflow-hidden">
@@ -142,8 +141,10 @@ export function ChatContainer() {
           </p>
           <p className="text-gray-500 text-xs mt-2">This may take a moment</p>
         </div>
-      ) : (
-        <MessageList messages={messages} />
+      ) : ( 
+        <div className="flex-1 overflow-y-auto p-4 h-full">
+          <MessageList messages={messages} />
+        </div>
       )}
       <ChatInput onSendMessage={handleSendMessage} disabled={isLoading} />
     </Card>

@@ -8,17 +8,16 @@ import type { StructuredTool } from "@langchain/core/tools";
 import { MemorySaver } from "@langchain/langgraph";
 import { IterableReadableStream } from "@langchain/core/utils/stream";
 import type { StreamEvent } from "@langchain/core/tracers/log_stream";
+import {CreateGridTool} from "./tools/CreateGridTool";
 
-// import { 
-//   SolanaBalanceOtherTool, 
-//   SolanaBalanceTool, 
-//   SolanaFetchPriceTool, 
-//   SolanaFetchTokenDetailedReportTool, 
-//   SolanaFetchTokenReportSummaryTool, 
-//   SolanaGetInfoTool,
-//   SolanaLimitOrderTool, 
-//   SolanaTradeTool 
-// } from "solana-agent-kit/dist/langchain";
+import { 
+  SolanaBalanceTool, 
+  SolanaTransferTool,
+  SolanaTradeTool,
+  SolanaGetWalletAddressTool,
+  SolanaFetchPriceTool,
+  SolanaTokenDataTool,
+} from "solana-agent-kit/dist/langchain";
 // Cache agent instance for reuse across requests
 let agentInstance: ReturnType<typeof createReactAgent> | null = null;
 
@@ -51,14 +50,13 @@ export async function getAgentInstance() {
     const solanaKit = new SolanaAgentKit(privateKey, rpcUrl!, apiKey!,);
 
     const tools: any[] = [
-      // new SolanaGetInfoTool(solanaKit),
-      // new SolanaBalanceTool(solanaKit),
-      // new SolanaBalanceOtherTool(solanaKit),
+      new SolanaBalanceTool(solanaKit),
+      // new SolanaTransferTool(solanaKit),
       // new SolanaTradeTool(solanaKit),
-      // new SolanaLimitOrderTool(solanaKit),
-      // new SolanaFetchPriceTool(solanaKit),
-      // new SolanaFetchTokenReportSummaryTool(solanaKit),
-      // new SolanaFetchTokenDetailedReportTool(solanaKit),
+      new SolanaFetchPriceTool(solanaKit),
+      new SolanaGetWalletAddressTool(solanaKit),
+      new SolanaTokenDataTool(solanaKit),
+      new CreateGridTool(),
     ];
     
     const memory = new MemorySaver();

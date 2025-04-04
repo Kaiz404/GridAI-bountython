@@ -1,3 +1,5 @@
+'use server';
+
 import { model, models, Schema, Model } from "mongoose";
 
 

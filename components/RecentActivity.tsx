@@ -1,21 +1,25 @@
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { ActivityCard } from "./ActivityCard"
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ActivityCard } from "./ActivityCard";
+import { ITrade } from "@/lib/database/models/trade.model";
 
-interface Transaction {
-  id: number
-  type: "buy" | "sell"
-  amount: number
-  item: string
-  date: string
-  time: string
-}
+// interface Transaction {
+//   id: number
+//   type: "buy" | "sell"
+//   amount: number
+//   item: string
+//   date: string
+//   time: string
+// }
 
 interface RecentActivityProps {
-  transactions: Transaction[]
-  limit?: number
+  transactions: ITrade[];
+  limit?: number;
 }
 
-export function RecentActivity({ transactions, limit = 4 }: RecentActivityProps) {
+export function RecentActivity({
+  transactions,
+  limit = 4,
+}: RecentActivityProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex items-center justify-between mb-3">
@@ -24,11 +28,14 @@ export function RecentActivity({ transactions, limit = 4 }: RecentActivityProps)
       <ScrollArea className="flex-1 w-full pr-4">
         <div className="space-y-3">
           {transactions.slice(0, limit).map((transaction) => (
-            <ActivityCard key={transaction.id} {...transaction} compact={true} />
+            <ActivityCard
+              key={transaction._id}
+              {...transaction}
+              compact={true}
+            />
           ))}
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }
-

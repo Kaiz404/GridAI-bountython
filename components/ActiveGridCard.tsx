@@ -1,75 +1,63 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { CryptoActivity } from "./CryptoActivity"
-import type { TokenInfo } from "./CryptoActivity"
-import { useState } from "react"
-import { TokenModal } from "./TokenModal"
-import { Label } from "./ui/label"
-import { Input } from "./ui/input"
-import { Button } from "./ui/button"
-
-const sampleTokens: TokenInfo[] = [
-  {
-    name: "Wrapped Ether",
-    address: "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
-    roi: 3.7,
-    price_in_usd: 2312,
-    amount_owned: 500,
-    value_usd: 1156000,
-    token_logo: "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
-    token_symbol: "WETH",
-  },
-  {
-    name: "Bitcoin",
-    address: "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
-    roi: -2.3,
-    price_in_usd: 43250,
-    amount_owned: 12,
-    value_usd: 519000,
-    token_logo: "https://tokens.1inch.io/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599.png",
-    token_symbol: "BTC",
-  },
-  {
-    name: "Polygon",
-    address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-    roi: 8.2,
-    price_in_usd: 0.58,
-    amount_owned: 150000,
-    value_usd: 87000,
-    token_logo: "https://tokens.1inch.io/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0.png",
-    token_symbol: "MATIC",
-  },
-  {
-    name: "Chainlink",
-    address: "0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39",
-    roi: 5.1,
-    price_in_usd: 13.42,
-    amount_owned: 3500,
-    value_usd: 46970,
-    token_logo: "https://tokens.1inch.io/0x514910771af9ca656af840dff83e8264ecf986ca.png",
-    token_symbol: "LINK",
-  },
-  {
-    name: "Uniswap",
-    address: "0xb33eaad8d922b1083446dc23f610c2567fb5180f",
-    roi: -1.8,
-    price_in_usd: 7.25,
-    amount_owned: 5200,
-    value_usd: 37700,
-    token_logo: "https://tokens.1inch.io/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984.png",
-    token_symbol: "UNI",
-  },
-]
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { CryptoActivity } from "./CryptoActivity";
+import { TokenModal } from "./TokenModal";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Loader2 } from "lucide-react";
+import { getAllGrids } from "@/lib/db_actions/grid";
+import { IGrid } from "@/lib/database/models/grid.model";
+import { addressToLogoMap } from "@/lib/tokenLogos";
+import { addressToSymbolMap } from "@/lib/tokenSymbols";
 
 export function ActiveGridsCard() {
-  const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(null);
+  const [selectedGrid, setSelectedGrid] = useState<IGrid | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState(""); // State to store the input value
 
-  const handleTokenClick = (token: TokenInfo) => {
-    setSelectedToken(token);
+  const [grids, setGrids] = useState<IGrid[]>([]);
+  const [loading, setLoading] = useState(true); // Add loading state
+
+  // Fetch data function separated for reuse with interval
+  const fetchData = async () => {
+    try {
+      setLoading(true); // Set loading to true when fetching data
+      const allGrids = await getAllGrids();
+      // Update state with fetched data
+      setGrids(allGrids);
+      console.log("Fetched grids:", allGrids);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); // Set loading to false when data fetching is complete
+    }
+  };
+
+  // Set up interval to fetch data every 5 seconds
+  useEffect(() => {
+    // Set up interval to refresh data every 5 seconds
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    // Clean up interval when component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Loading state component
+  const LoadingState = () => (
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <Loader2 className="h-12 w-12 animate-spin text-yellow-400 mb-4" />
+      <p className="text-lg text-gray-300">Fetching from database...</p>
+    </div>
+  );
+
+  const handleTokenClick = (grid: IGrid) => {
+    setSelectedGrid(grid);
     setIsModalOpen(true);
   };
 
@@ -87,9 +75,14 @@ export function ActiveGridsCard() {
       <Card className="w-full h-1/2 p-6 bg-[#2a2a2a] border-[#3a3a3a] overflow-y-auto">
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between mb-4 h-full p-4">
-            <h2 className="text-xl font-semibold text-gray-200">Active Grids</h2>
+            <h2 className="text-xl font-semibold text-gray-200">
+              Active Grids
+            </h2>
 
-            <form className="space-y-4 w-[25%]" onSubmit={(e) => e.preventDefault()}>
+            <form
+              className="space-y-4 w-[25%]"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <div className="space-y-2 flex w-full gap-4">
                 <Input
                   id="amount"
@@ -108,17 +101,32 @@ export function ActiveGridsCard() {
               </div>
             </form>
           </div>
-          <ScrollArea className="flex-1 w-full pr-4">
-            <div className="grid-cols-2 grid gap-6">
-              {sampleTokens.map((token) => (
-                <CryptoActivity key={token.address} {...token} onClick={() => handleTokenClick(token)} />
-              ))}
+          <ScrollArea className="flex-1 w-full pr-4 h-full">
+            <div className="h-full">
+              {loading && grids.length === 0 ? (
+                <Card className="w-full h-1/2 p-4 bg-[#2a2a2a] border-[#3a3a3a] flex flex-col">
+                  <LoadingState />
+                </Card>
+              ) : (
+                <div className="grid-cols-2 grid gap-6 h-full">
+                  {grids.map((grid) => (
+                    <CryptoActivity
+                      key={grid._id}
+                      {...grid}
+                      onClick={() => handleTokenClick(grid)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </ScrollArea>
         </div>
-        <TokenModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} token={selectedToken} />
+        <TokenModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          grid={selectedGrid}
+        />
       </Card>
     </>
   );
 }
-

@@ -1,5 +1,7 @@
+'use server';
+
 import dbConnect from "../database";
-import Trade, { ITrade, Side } from "../database/models/trade.model";
+import Trade, { ITrade } from "../database/models/trade.model";
 import { Types } from "mongoose";
 
 export async function createTrade(
@@ -7,7 +9,7 @@ export async function createTrade(
 ): Promise<ITrade> {
   await dbConnect();
   const trade = await Trade.create(tradeData);
-  return trade.toObject();
+  return trade.toJSON();
 }
 
 export async function getTradeById(id: string): Promise<ITrade | null> {
@@ -18,7 +20,7 @@ export async function getTradeById(id: string): Promise<ITrade | null> {
   }
   
   const trade = await Trade.findById(id);
-  return trade ? trade.toObject() : null;
+  return trade ? trade.toJSON() : null;
 }
 
 export async function getTradesByGridId(
@@ -42,7 +44,7 @@ export async function getTradesByGridId(
     .skip(skip)
     .limit(limit);
   
-  return trades.map(trade => trade.toObject());
+  return trades.map(trade => trade.toJSON());
 }
 
 export async function updateTrade(
@@ -61,7 +63,7 @@ export async function updateTrade(
     { new: true }
   );
   
-  return trade ? trade.toObject() : null;
+  return trade ? trade.toJSON() : null;
 }
 
 export async function deleteTrade(id: string): Promise<boolean> {
@@ -87,8 +89,8 @@ export async function getTradeSummaryByGridId(gridId: string): Promise<{
   }
   
   const [buys, sells, profitResult] = await Promise.all([
-    Trade.countDocuments({ gridId, side: Side.BUY }),
-    Trade.countDocuments({ gridId, side: Side.SELL }),
+    Trade.countDocuments({ gridId, side: "BUY" }),
+    Trade.countDocuments({ gridId, side: "SELL" }),
     Trade.aggregate([
       { $match: { gridId: new Types.ObjectId(gridId), profit: { $exists: true, $ne: null } } },
       { $group: { _id: null, totalProfit: { $sum: "$profit" } } }
@@ -114,5 +116,28 @@ export async function getRecentTrades(
     .limit(limit)
     .populate('gridId', 'inputToken outputToken');
   
-  return trades.map(trade => trade.toObject());
-}
+    return JSON.parse(JSON.stringify(trades.map(trade => trade.toObject({ getters: true }))));
+  }
+
+
+// // Example usage
+// (async () => {
+//   const trade = await createTrade({
+//     gridId: new Types.ObjectId(), // Replace with actual grid ID
+//     side: "BUY",
+//     inputToken: "ETH",
+//     outputToken: "USDT",
+//     inputTokenId: "0x1234567890abcdef",
+//     outputTokenId: "0xabcdef1234567890",
+//     inputAmount: 1,
+//     outputAmount: 2000,
+//     gridLevel: 1,
+//     executedAt: new Date(),
+//     transactionHash: "0x1234567890abcdef",
+//     profit: 100,
+//   });
+//   console.log("Created Trade:", trade);
+// })();
+
+
+

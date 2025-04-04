@@ -1,16 +1,17 @@
-import { model, models, Schema, Model, Types } from "mongoose";
+'use server';
 
-export enum Side {
-  BUY = "BUY",
-  SELL = "SELL"
-}
+import { model, Schema, Types  } from 'mongoose';
+import type { Model} from 'mongoose';
+import mongoose from "mongoose";
 
 export interface ITrade {
   _id: string;
   gridId: Types.ObjectId | string; // Reference to the Grid
-  side: Side;
-  inputToken: string;
-  outputToken: string;
+  side: "BUY" | "SELL"; // Trade side (BUY or SELL)
+  inputToken: string; // Token being traded (input token)
+  outputToken: string; // Token being received (output token)
+  inputTokenId: string;
+  outputTokenId: string;
   inputAmount: number;
   outputAmount: number;
   gridLevel: number;
@@ -30,7 +31,7 @@ const tradeSchema = new Schema<ITrade>(
     },
     side: { 
       type: String, 
-      enum: Object.values(Side), 
+      enum: ["BUY", "SELL"],
       required: true 
     },
     inputToken: { 
@@ -38,6 +39,14 @@ const tradeSchema = new Schema<ITrade>(
       required: true 
     },
     outputToken: { 
+      type: String, 
+      required: true 
+    },
+    inputTokenId: { 
+      type: String, 
+      required: true 
+    },
+    outputTokenId: { 
       type: String, 
       required: true 
     },
@@ -72,6 +81,6 @@ const tradeSchema = new Schema<ITrade>(
 tradeSchema.index({ gridId: 1, createdAt: -1 });
 tradeSchema.index({ status: 1 });
 
-const Trade: Model<ITrade> = models.Trade || model<ITrade>('Trade', tradeSchema);
+const Trade: Model<ITrade> = mongoose.models?.Trade || model<ITrade>('Trade', tradeSchema);
 
 export default Trade;

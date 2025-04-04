@@ -11,13 +11,11 @@ export class GetGridsTool extends Tool {
   This tool retrieves information about grid trading strategies that have been created.
   
   Inputs (input is a JSON string):
-  active: boolean - Optional filter to get only active or inactive grids
   limit: number - Optional limit on the number of results (default: 100)
   
   Example: 
   {
-    "active": true,
-    "limit": 5
+    "limit": 10
   }`;
 
   constructor() {
@@ -32,13 +30,8 @@ export class GetGridsTool extends Tool {
       const { active, limit } = parsedInput;
       
       const options: {
-        active?: boolean;
         limit?: number;
       } = {};
-      
-      if (active !== undefined) {
-        options.active = !!active;
-      }
       
       if (limit !== undefined && typeof limit === 'number') {
         options.limit = limit;

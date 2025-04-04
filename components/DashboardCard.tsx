@@ -5,6 +5,12 @@ import { RecentActivity } from "./RecentActivity";
 import { ChatContainer } from "./ChatContainer";
 import { ActiveGrids } from "./ActiveGrids";
 import type { TokenInfo } from "./CryptoActivity";
+import { useEffect, useState } from "react";
+import { getAllGrids, getAllGridSummary } from "@/lib/db_actions/grid";
+import { getRecentTrades } from "@/lib/db_actions/trade";
+import { ITrade } from "@/lib/database/models/trade.model";
+import { IGrid } from "@/lib/database/models/grid.model";
+import { Loader2 } from "lucide-react";
 
 // Sample data
 const sampleData = {
@@ -130,6 +136,60 @@ const sampleTokens: TokenInfo[] = [
 ];
 
 export default function DashboardCard() {
+  const [profitLoss, setProfitLoss] = useState(0);
+  const [totalBuys, setTotalBuys] = useState(0);
+  const [totalSells, setTotalSells] = useState(0);
+  const [transactions, setTransactions] = useState<ITrade[]>([]);
+  const [grids, setGrids] = useState<IGrid[]>([]);
+  const [loading, setLoading] = useState(true); // Add loading state
+
+  // Fetch data function separated for reuse with interval
+  const fetchData = async () => {
+    try {
+      setLoading(true); // Set loading to true when fetching data
+
+      const { grids, totalProfit, profitPercentage, totalBuys, totalSells } =
+        await getAllGridSummary();
+
+      const trades = await getRecentTrades();
+
+      const allGrids = await getAllGrids();
+
+      // Update state with fetched data
+      setProfitLoss(profitPercentage);
+      setTotalBuys(totalBuys);
+      setTotalSells(totalSells);
+      setTransactions(trades);
+      setGrids(allGrids);
+      console.log("Fetched grids:", allGrids);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); // Set loading to false when data fetching is complete
+    }
+  };
+
+  // Set up interval to fetch data every 5 seconds
+  useEffect(() => {
+    fetchData();
+
+    // Set up interval to refresh data every 5 seconds
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    // Clean up interval when component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Loading state component
+  const LoadingState = () => (
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <Loader2 className="h-12 w-12 animate-spin text-yellow-400 mb-4" />
+      <p className="text-lg text-gray-300">Fetching from database...</p>
+    </div>
+  );
+
   return (
     <div className="w-full h-[800px] p-6 flex gap-6 bg-[#1a1a1a] dark">
       {/* Left side - Chat (30%) */}
@@ -143,21 +203,33 @@ export default function DashboardCard() {
         <Card className="w-full h-1/2 p-4 bg-[#2a2a2a] border-[#3a3a3a] flex flex-col">
           <h2 className="text-xl font-semibold text-gray-200">Dashboard</h2>
 
-          {/* Metrics Grid */}
-          <DashboardMetrics
-            profitLoss={sampleData.profitLoss}
-            totalSells={sampleData.totalSells}
-            totalBuys={sampleData.totalBuys}
-          />
+          {loading && grids.length === 0 ? (
+            <LoadingState />
+          ) : (
+            <>
+              {/* Metrics Grid */}
+              <DashboardMetrics
+                profitLoss={profitLoss}
+                totalSells={totalSells}
+                totalBuys={totalBuys}
+              />
 
-          {/* Recent Activity - Fixed height to prevent overflow */}
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            <RecentActivity transactions={sampleData.transactions} />
-          </div>
+              {/* Recent Activity - Fixed height to prevent overflow */}
+              <div className="flex-1 min-h-0 overflow-y-auto">
+                <RecentActivity transactions={transactions} />
+              </div>
+            </>
+          )}
         </Card>
 
         {/* Transaction History */}
-        <ActiveGrids />
+        {loading && grids.length === 0 ? (
+          <Card className="w-full h-1/2 p-4 bg-[#2a2a2a] border-[#3a3a3a] flex flex-col">
+            <LoadingState />
+          </Card>
+        ) : (
+          <ActiveGrids grids={grids} />
+        )}
       </div>
     </div>
   );

@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import React from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { MessageBubble, type Message } from "./MessageBubble"
+import React from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { MessageBubble, type Message } from "./MessageBubble";
 
 interface MessageListProps {
-  messages: Message[]
+  messages: Message[];
 }
 
 export function MessageList({ messages }: MessageListProps) {
-  const messagesEndRef = React.useRef<HTMLDivElement>(null)
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <ScrollArea className="flex-1 p-4">
@@ -30,6 +30,5 @@ export function MessageList({ messages }: MessageListProps) {
         </>
       )}
     </ScrollArea>
-  )
+  );
 }
-
